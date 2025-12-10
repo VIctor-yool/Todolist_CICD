@@ -5,7 +5,7 @@ const prisma = new PrismaClient()
 
 export const getAllTodos = async (req: Request, res: Response) => {
   try {
-    const todos = await prisma.todo.findMany({
+    const todos = await prisma.todos.findMany({
       include: {
         subtasks: {
           orderBy: { order: 'asc' },
@@ -22,7 +22,7 @@ export const getAllTodos = async (req: Request, res: Response) => {
 export const getTodoById = async (req: Request, res: Response) => {
   try {
     const { id } = req.params
-    const todo = await prisma.todo.findUnique({
+    const todo = await prisma.todos.findUnique({
       where: { id },
       include: {
         subtasks: {
@@ -44,12 +44,12 @@ export const createTodo = async (req: Request, res: Response) => {
     const { title, description, date, subtasks } = req.body
 
     // Get the current max order
-    const maxOrderTodo = await prisma.todo.findFirst({
+    const maxOrderTodo = await prisma.todos.findFirst({
       orderBy: { order: 'desc' },
     })
     const order = maxOrderTodo ? maxOrderTodo.order + 1 : 0
 
-    const todo = await prisma.todo.create({
+    const todo = await prisma.todos.create({
       data: {
         title,
         description,
@@ -82,7 +82,7 @@ export const updateTodo = async (req: Request, res: Response) => {
     const { id } = req.params
     const { title, description, completed, date, subtasks } = req.body
 
-    const todo = await prisma.todo.update({
+    const todo = await prisma.todos.update({
       where: { id },
       data: {
         ...(title !== undefined && { title }),
@@ -115,7 +115,7 @@ export const updateTodo = async (req: Request, res: Response) => {
 export const deleteTodo = async (req: Request, res: Response) => {
   try {
     const { id } = req.params
-    await prisma.todo.delete({
+    await prisma.todos.delete({
       where: { id },
     })
     res.status(204).send()
@@ -135,7 +135,7 @@ export const reorderTodos = async (req: Request, res: Response) => {
     // Update order for each todo
     await Promise.all(
       todoIds.map((id: string, index: number) =>
-        prisma.todo.update({
+        prisma.todos.update({
           where: { id },
           data: { order: index },
         })

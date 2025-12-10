@@ -1,5 +1,6 @@
 import { Request, Response } from 'express'
 import { PrismaClient } from '@prisma/client'
+import { randomUUID } from 'crypto'
 
 const prisma = new PrismaClient()
 
@@ -51,16 +52,20 @@ export const createTodo = async (req: Request, res: Response) => {
 
     const todo = await prisma.todos.create({
       data: {
+        id: randomUUID(),
         title,
         description,
         date,
         order,
+        updatedAt: new Date(),
         subtasks: subtasks
           ? {
               create: subtasks.map((st: any, index: number) => ({
+                id: randomUUID(),
                 title: st.title,
                 completed: st.completed || false,
                 order: st.order ?? index,
+                updatedAt: new Date(),
               })),
             }
           : undefined,
@@ -89,13 +94,16 @@ export const updateTodo = async (req: Request, res: Response) => {
         ...(description !== undefined && { description }),
         ...(completed !== undefined && { completed }),
         ...(date !== undefined && { date }),
+        updatedAt: new Date(),
         ...(subtasks && {
           subtasks: {
             deleteMany: {},
             create: subtasks.map((st: any, index: number) => ({
+              id: randomUUID(),
               title: st.title,
               completed: st.completed || false,
               order: st.order ?? index,
+              updatedAt: new Date(),
             })),
           },
         }),

@@ -1,0 +1,54 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@keyframes slide-in {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+.animate-slide-in {
+  animation: slide-in 0.3s ease-out;
+}
+
+@layer base {
+  * {
+    box-sizing: border-box;
+  }
+  
+  html {
+    @apply transition-colors duration-300;
+    width: 100%;
+    height: 100%;
+  }
+  
+  body {
+    @apply bg-princess-50 dark:bg-slate-900 text-princess-900 dark:text-princess-50;
+    @apply min-h-screen w-full;
+    margin: 0;
+    padding: 0;
+  }
+}
+
+@layer utilities {
+  .princess-texture {
+    background-image: 
+      radial-gradient(circle at 20% 50%, rgba(236, 72, 153, 0.1) 0%, transparent 50%),
+      radial-gradient(circle at 80% 80%, rgba(168, 85, 247, 0.1) 0%, transparent 50%),
+      radial-gradient(circle at 40% 20%, rgba(245, 158, 11, 0.05) 0%, transparent 50%);
+  }
+  
+  .princess-texture-dark {
+    background-image: 
+      radial-gradient(circle at 20% 50%, rgba(236, 72, 153, 0.05) 0%, transparent 50%),
+      radial-gradient(circle at 80% 80%, rgba(168, 85, 247, 0.05) 0%, transparent 50%),
+      radial-gradient(circle at 40% 20%, rgba(131, 24, 67, 0.3) 0%, transparent 50%);
+  }
+}
+
